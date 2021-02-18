@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {AuthorInfoDialogComponent} from './shared/author-info-dialog/author-info-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'cook-book';
+  appName = 'cook-book';
+  constructor(public dialog: MatDialog) {}
+
+  openDialog(): any{
+    this.dialog.open(AuthorInfoDialogComponent);
+  }
 }
