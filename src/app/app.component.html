@@ -1,6 +1,20 @@
-<nav>
+<mat-toolbar>
   <p>{{appName}}</p>
   <img (click)="openDialog()" src="./favicon.ico" alt="appIcon">
-</nav>
-<app-recipe-list></app-recipe-list>
-<router-outlet></router-outlet>
+</mat-toolbar>
+
+<mat-grid-list cols="3" [rowHeight]="'100%'">
+  <mat-grid-tile
+    [colspan]=1
+    [rowspan]=1
+    [style.background]="'blue'">
+    <app-recipe-list></app-recipe-list>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    [colspan]=2
+    [rowspan]=1
+    [style.background]="'yellow'">
+    <router-outlet></router-outlet>
+  </mat-grid-tile>
+</mat-grid-list>
