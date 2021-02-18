@@ -1,1 +1,18 @@
-<p>recipe-list works!</p>
+<mat-nav-list>
+  <input matInput type="text" [(ngModel)]="searchValue" (ngModelChange)="filterRecipes()">
+  <mat-list-item *ngFor="let recipe of filteredRecipes">
+    <a class="recipe-list-item"
+       [routerLink]="['/recipe-details', recipe._id]">
+      <p>{{ recipe.name }}</p>
+    </a>
+    <button [routerLink]="['/recipe-edit', recipe._id]"
+            mat-raised-button color="accent">Edit</button>
+    <button (click)="deleteRecipeDialog(recipe._id)"
+            mat-raised-button color="warn">Delete</button>
+  </mat-list-item>
+  <div class="example-button-container">
+    <button [routerLink]="['/recipe-create']" mat-fab aria-label="Add recipe button">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</mat-nav-list>
