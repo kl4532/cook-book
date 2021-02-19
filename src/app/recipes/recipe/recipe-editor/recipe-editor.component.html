@@ -10,15 +10,15 @@
 
   <mat-form-field appearance="standard">
     <mat-label>Preparation time</mat-label>
-    <input matInput formControlName="preparation">
+    <input matInput formControlName="preparationTimeInMinutes">
     <span matSuffix>min</span>
-    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Must be positive numeral</mat-error>
+    <mat-error *ngIf="recipeForm.controls.preparationTimeInMinutes.invalid">Must be positive numeral</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="standard">
     <mat-label>Description</mat-label>
     <input matInput formControlName="description">
-    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Min 15 / Max 255 characters</mat-error>
+    <mat-error *ngIf="recipeForm.controls.description.invalid">Min 15 / Max 255 characters</mat-error>
   </mat-form-field>
 
 <!--  Ingredients formArray-->
