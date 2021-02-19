@@ -11,10 +11,15 @@ import {Observable} from 'rxjs';
 
 export class RecipeService {
   changesTriggered: EventEmitter<boolean> = new EventEmitter();
+
+  // Passing those headers in options for any http request was triggering problems with Cors policy -> and stopping requests.
+  // I couldn't find workaround.
   httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
+        'Content-Type': 'application/json',
+        'X-API-KEY': 'HoA'
+      }
+    )
   };
 
   constructor(
@@ -37,10 +42,9 @@ export class RecipeService {
         console.log('success', data);
         this.changesTriggered.emit(true);
       },
-      error => console.log('oops', error)
+      error => console.log('ERROR', error)
     );
   }
-
 
   deleteRecipe(id: string): any {
     return this.http.delete(`${this.baseUrl}/recipes/${id}`).subscribe(
@@ -48,7 +52,7 @@ export class RecipeService {
               console.log('success', data);
               this.changesTriggered.emit(true);
             },
-      error => console.log('oops', error)
+      error => console.log('ERROR', error)
     );
   }
 
@@ -58,14 +62,14 @@ export class RecipeService {
         console.log('success', data);
         this.changesTriggered.emit(true);
       },
-      error => console.log('oops', error)
+      error => console.log('ERROR', error)
     );
   }
 
   confirmDeletion(id: string): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: `Are you sure want to recipe ${id}`,
+        message: `Are you sure want to remove this recipe`,
         buttonText: {
           ok: 'Yes',
           cancel: 'No'
