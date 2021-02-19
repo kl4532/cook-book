@@ -15,7 +15,6 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
   recipeId = '';
   recipeForm: FormGroup = new FormGroup({});
   ingredients: FormArray = new FormArray([]);
-  mockIng = [{name: 'testIng', quantity: 10}, {name: 'testIng2', quantity: 30}];
   modeEdit = false;
   recipe: any;
 
@@ -33,13 +32,14 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
       const param = 'id';
       this.recipeId = params[param];
       this.modeEdit = !!this.recipeId;
-      this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
-        this.recipe = recipe;
-        if (this.modeEdit) {
-          this.setForm();
-        }
-        this.cdr.detectChanges();
-      });
+      if (this.modeEdit) {
+          this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+            this.recipe = recipe;
+            this.setForm();
+            this.cdr.detectChanges();
+        });
+      }
+
     });
   }
   init(): void {
