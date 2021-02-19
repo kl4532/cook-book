@@ -1,8 +1,8 @@
-import {Component, OnChanges, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Recipe} from '../common/models/recipe';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
+import {RecipeService} from '../common/recipe.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -10,60 +10,33 @@ import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog
   styleUrls: ['./recipe-list.component.scss']
 })
 export class RecipeListComponent implements OnInit{
-  recipes: Recipe[] = [
-    {
-      _id: '0',
-      name: 'gulasz',
-      preparationTimeInMinutes: 45,
-      description: 'Tasty gulasz',
-      ingredients: [{_id: '0', name: 'meat', quantity: '100'}]
-    },
-    {
-      _id: '1',
-      name: 'salad',
-      preparationTimeInMinutes: 10,
-      description: 'Healthy salad',
-      ingredients: [{_id: '0', name: 'salad', quantity: '20'}]
-    }
-  ];
+  recipes: Recipe[] = [];
   filteredRecipes: Recipe[] = [];
 
   searchValue = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private recipeService: RecipeService) { }
 
   ngOnInit(): void {
-    this.filterRecipes();
+    this.recipeService.getAllRecipes().subscribe((recipes: Recipe[]) => {
+      this.recipes = recipes;
+      this.filterRecipes();
+    });
   }
 
   filterRecipes(): void {
-    if(this.searchValue !== '' || !this.searchValue) {
-      const recipes = this.recipes.filter(recipe => recipe.name.toLowerCase().includes(this.searchValue.toLowerCase()));
-      this.filteredRecipes = recipes;
+    if (this.searchValue !== '' || !this.searchValue) {
+      this.filteredRecipes = this.recipes.filter(recipe => recipe.name.toLowerCase().includes(this.searchValue.toLowerCase()));
     } else {
       this.filteredRecipes = this.recipes;
     }
   }
 
-  deleteRecipeDialog(id: string): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data:{
-        message: `Are you sure want to recipe ${id}`,
-        buttonText: {
-          ok: 'Yes',
-          cancel: 'No'
-        }
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        // remove recipe with id
-        console.log('deletion confirmed');
-      }
-    });
+  onDeleteRecipe(id: string): void {
+    this.recipeService.confirmDeletion(id);
   }
 
 
