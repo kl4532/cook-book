@@ -24,10 +24,10 @@
       ]
     },
     {
-      "_id": "0",
+      "_id": "1",
       "name": "salad",
       "preparationTimeInMinutes": 25,
-      "description": "Healthy salad",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam autem, blanditiis commodi esse laudantium maxime molestias nisi nostrum obcaecati optio quaerat qui quisquam reiciendis repellendus suscipit ullam. Tempora, tempore!",
       "ingredients": [
         {
           "_id": "1",
