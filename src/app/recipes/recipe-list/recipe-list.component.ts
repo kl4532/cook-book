@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Recipe} from '../common/models/recipe';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -7,7 +7,8 @@ import {RecipeService} from '../common/recipe.service';
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.scss']
+  styleUrls: ['./recipe-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeListComponent implements OnInit{
   recipes: Recipe[] = [];
@@ -18,12 +19,14 @@ export class RecipeListComponent implements OnInit{
   constructor(private route: ActivatedRoute,
               private router: Router,
               public dialog: MatDialog,
-              private recipeService: RecipeService) { }
+              private recipeService: RecipeService,
+              private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.recipeService.getAllRecipes().subscribe((recipes: Recipe[]) => {
       this.recipes = recipes;
       this.filterRecipes();
+      this.cdr.detectChanges();
     });
   }
 
