@@ -13,13 +13,18 @@ import {MatButtonModule} from '@angular/material/button';
 
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import {HttpClientModule} from '@angular/common/http';
+import {MatIconModule} from '@angular/material/icon';
+import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
+import { InfoPageComponent } from './shared/info-page/info-page.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthorInfoDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PageNotFoundComponent,
+    InfoPageComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +36,8 @@ import {HttpClientModule} from '@angular/common/http';
     MatDialogModule,
     MatGridListModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
