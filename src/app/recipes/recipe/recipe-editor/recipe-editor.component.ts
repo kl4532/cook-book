@@ -1,26 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RecipeService} from '../../common/recipe.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ArrayValidators} from '../../common/array.validator';
+import {Recipe} from '../../common/models/recipe';
 
 @Component({
   selector: 'app-recipe-editor',
   templateUrl: './recipe-editor.component.html',
-  styleUrls: ['./recipe-editor.component.scss']
+  styleUrls: ['./recipe-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeEditorComponent implements OnInit {
   recipeId = '';
-  recipeForm: FormGroup;
-  ingredients: FormArray;
+  recipeForm: FormGroup = new FormGroup({});
+  ingredients: FormArray = new FormArray([]);
   mockIng = [{name: 'testIng', quantity: 10}, {name: 'testIng2', quantity: 30}];
+  modeEdit = false;
+  recipe: any;
 
   constructor(private activatedRoute: ActivatedRoute,
               private recipeService: RecipeService,
               private router: Router,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.init();
+
+    this.activatedRoute.params.subscribe(params => {
+      const param = 'id';
+      this.recipeId = params[param];
+      this.modeEdit = !!this.recipeId;
+      this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+        this.recipe = recipe;
+        if (this.modeEdit) {
+          this.setForm();
+        }
+        this.cdr.detectChanges();
+      });
+    });
+  }
+  init(): void {
     this.activatedRoute.params.subscribe(params => {
       const param = 'id';
       this.recipeId = params[param];
@@ -43,20 +65,36 @@ export class RecipeEditorComponent implements OnInit {
       ]),
       ingredients: this.formBuilder.array([], [Validators.required, ArrayValidators.minLength(2)])
     });
-    // this.recipeService.getRecipeDetails(recipeId).subscribe(details => this.recipeDetails = details);
   }
 
-  createItem(): FormGroup {
+  setForm(): void {
+    console.log('setting form');
+
+    this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+      this.recipeForm.setValue({
+        name: recipe.name,
+        preparation: recipe.preparationTimeInMinutes,
+        description: recipe.description,
+        ingredients: []
+      });
+      for (const ingredient of recipe.ingredients) {
+        this.addItem(ingredient.name, ingredient.quantity);
+      }
+    });
+  }
+
+
+  createItem(name: string, quantity: string): FormGroup {
     return this.formBuilder.group({
-      id: 'add random id here',
-      name: ['', Validators.required ],
-      quantity: ['', Validators.required ]
+      id: 'zxc',
+      name: [name, Validators.required ],
+      quantity: [quantity, [Validators.required, Validators.pattern('^[0-9]*$')] ]
     }, ArrayValidators.minLength(2));
   }
 
-  addItem(): void {
+  addItem(name: string, quantity: string): void {
     this.ingredients = this.recipeForm.get('ingredients') as FormArray;
-    this.ingredients.push(this.createItem());
+    this.ingredients.push(this.createItem(name, quantity));
   }
 
   removeItem(index: number): void {

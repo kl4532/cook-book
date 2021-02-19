@@ -1,6 +1,7 @@
-<!--Create new recipe-->
+<h2 *ngIf="!modeEdit">Create new recipe</h2>
+<h2 *ngIf="modeEdit">Edit recipe</h2>
 
-<form [formGroup]="recipeForm">
+<form [formGroup]="recipeForm" *ngIf="recipeForm">
   <mat-form-field appearance="standard">
     <mat-label>Recipe name</mat-label>
     <input matInput formControlName="name">
@@ -11,7 +12,7 @@
     <mat-label>Preparation time</mat-label>
     <input matInput formControlName="preparation">
     <span matSuffix>min</span>
-    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Must be numeral</mat-error>
+    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Must be positive numeral</mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="standard">
@@ -23,11 +24,11 @@
 <!--  Ingredients formArray-->
   <div class="ingredient-header">
     <h4>Ingredients</h4>
-    <button mat-mini-fab color="accent" type="button" (click)="addItem()"><mat-icon>add</mat-icon></button>
+    <button mat-mini-fab color="accent" type="button" (click)="addItem('', '')"><mat-icon>add</mat-icon></button>
   </div>
 
   <ng-container *ngIf="ingredients">
-    <ng-container formArrayName="ingredients" *ngFor="let item of recipeForm.get('ingredients')['controls']; let i = index;">
+    <ng-container formArrayName="ingredients" *ngFor="let ingredient of ingredients.controls; let i = index;">
       <div class="ingredient-group" [formGroupName]="i">
         <mat-form-field appearance="standard">
           <mat-label>Name</mat-label>
@@ -36,6 +37,7 @@
         <mat-form-field appearance="standard">
           <mat-label>Quantity</mat-label>
           <input matInput formControlName="quantity">
+<!--          <mat-error *ngIf="ingredient.controls['quantity']invalid">Must be positive numeral</mat-error>-->
         </mat-form-field>
         <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"><mat-icon>remove_circle</mat-icon></button>
       </div>
@@ -47,7 +49,4 @@
     <button type="submit" mat-raised-button (click)="onCancel()">Cancel</button>
   </div>
 
-
 </form>
-
-<!--Edit recipe-->
