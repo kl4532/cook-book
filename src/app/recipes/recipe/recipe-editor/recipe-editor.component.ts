@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RecipeService} from '../../common/recipe.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -11,7 +11,7 @@ import {Recipe} from '../../common/models/recipe';
   styleUrls: ['./recipe-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecipeEditorComponent implements OnInit {
+export class RecipeEditorComponent implements OnInit, OnDestroy {
   recipeId = '';
   recipeForm: FormGroup = new FormGroup({});
   ingredients: FormArray = new FormArray([]);
@@ -54,7 +54,7 @@ export class RecipeEditorComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(80)
       ]),
-      preparation: new FormControl('', [
+      preparationTimeInMinutes: new FormControl('', [
         Validators.required,
         Validators.pattern('^[0-9]*$')
       ]),
@@ -73,20 +73,21 @@ export class RecipeEditorComponent implements OnInit {
     this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
       this.recipeForm.setValue({
         name: recipe.name,
-        preparation: recipe.preparationTimeInMinutes,
+        preparationTimeInMinutes: recipe.preparationTimeInMinutes,
         description: recipe.description,
         ingredients: []
       });
       for (const ingredient of recipe.ingredients) {
         this.addItem(ingredient.name, ingredient.quantity);
       }
+      console.log('recipe', recipe);
     });
   }
 
 
   createItem(name: string, quantity: string): FormGroup {
     return this.formBuilder.group({
-      id: 'zxc',
+      _id: new Date().getUTCMilliseconds(),
       name: [name, Validators.required ],
       quantity: [quantity, [Validators.required, Validators.pattern('^[0-9]*$')] ]
     }, ArrayValidators.minLength(2));
@@ -107,9 +108,15 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   onSave(): void {
-    // this.recipeService.createRecipe()
-    // this.recipeService.editRecipe()
-    console.log(this.recipeForm);
+    if (this.modeEdit) {
+      this.recipeService.updateRecipe(this.recipeId, this.recipeForm.value);
+    } else {
+      this.recipeService.createRecipe(this.recipeForm.value);
+    }
+  }
+
+  ngOnDestroy(): void{
+    console.log('Destroying...');
   }
 
 }

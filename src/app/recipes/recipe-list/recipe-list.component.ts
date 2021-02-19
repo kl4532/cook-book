@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Recipe} from '../common/models/recipe';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -10,7 +10,7 @@ import {RecipeService} from '../common/recipe.service';
   styleUrls: ['./recipe-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecipeListComponent implements OnInit{
+export class RecipeListComponent implements OnInit, OnDestroy{
   recipes: Recipe[] = [];
   filteredRecipes: Recipe[] = [];
 
@@ -23,6 +23,13 @@ export class RecipeListComponent implements OnInit{
               private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.getAllRecipes();
+    this.recipeService.changesTriggered.subscribe(() => {
+      this.getAllRecipes();
+    });
+  }
+
+  getAllRecipes(): void {
     this.recipeService.getAllRecipes().subscribe((recipes: Recipe[]) => {
       this.recipes = recipes;
       this.filterRecipes();
@@ -42,7 +49,8 @@ export class RecipeListComponent implements OnInit{
     this.recipeService.confirmDeletion(id);
   }
 
-
-
+  ngOnDestroy(): void{
+    console.log('Destroying...');
+  }
 
 }
