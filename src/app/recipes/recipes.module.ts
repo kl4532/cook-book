@@ -41,7 +41,7 @@ export const API_URL = 'API_URL';
     RecipeDetailsComponent,
     RecipeEditorComponent
   ],
-  providers: [    {
+  providers: [{
     provide: API_URL,
     useValue: environment.API_URL
   }],

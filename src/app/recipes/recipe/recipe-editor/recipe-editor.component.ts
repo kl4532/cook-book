@@ -68,8 +68,6 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
   }
 
   setForm(): void {
-    console.log('setting form');
-
     this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
       this.recipeForm.setValue({
         name: recipe.name,
@@ -80,7 +78,6 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
       for (const ingredient of recipe.ingredients) {
         this.addItem(ingredient.name, ingredient.quantity);
       }
-      console.log('recipe', recipe);
     });
   }
 
