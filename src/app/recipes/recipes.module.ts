@@ -4,9 +4,10 @@ import { RecipeComponent } from './recipe/recipe.component';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
 import {RouterModule} from '@angular/router';
-import {RecipeEditComponent} from './recipe/recipe-edit/recipe-edit.component';
-import {RecipeCreateComponent} from './recipe/recipe-create/recipe-create.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { RecipeEditorComponent } from './recipe/recipe-editor/recipe-editor.component';
+import { ConvertTimePipe } from './common/convert-time.pipe';
+
 // MatImports
 import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,11 +16,17 @@ import {MatInputModule} from '@angular/material/input';
 
 
 @NgModule({
-  declarations: [RecipeComponent, RecipeListComponent, RecipeDetailsComponent, RecipeEditComponent, RecipeCreateComponent],
+  declarations: [
+    RecipeComponent,
+    RecipeListComponent,
+    RecipeDetailsComponent,
+    ConvertTimePipe,
+    RecipeEditorComponent],
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
+    ReactiveFormsModule,
     // MatModules
     MatIconModule,
     MatInputModule,
@@ -31,7 +38,8 @@ import {MatInputModule} from '@angular/material/input';
     RecipeListComponent,
     RecipeListComponent,
     RecipeDetailsComponent,
-    RecipeEditComponent,
-    RecipeCreateComponent]
+    RecipeEditorComponent
+  ],
+  providers: []
 })
 export class RecipesModule { }

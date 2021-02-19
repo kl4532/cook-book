@@ -12,6 +12,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
     AppRoutingModule,
     BrowserAnimationsModule,
     RecipesModule,
+    HttpClientModule,
     // MatModules
     MatDialogModule,
     MatGridListModule,
