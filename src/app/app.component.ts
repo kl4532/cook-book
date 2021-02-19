@@ -9,10 +9,10 @@ import {AuthorInfoDialogComponent} from './shared/author-info-dialog/author-info
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  appName = 'cook-book';
+  title = 'cook-book';
   constructor(public dialog: MatDialog) {}
 
-  openDialog(): any{
+  openDialog(): void{
     this.dialog.open(AuthorInfoDialogComponent);
   }
 }

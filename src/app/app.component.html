@@ -1,20 +1,18 @@
 <mat-toolbar>
-  <p>{{appName}}</p>
-  <img (click)="openDialog()" src="./favicon.ico" alt="appIcon">
+  <p>{{title | uppercase}}</p>
+  <img (click)="openDialog()" src="./assets/cook-book-icon.png" alt="appIcon">
 </mat-toolbar>
 
 <mat-grid-list cols="3" [rowHeight]="'100%'">
-  <mat-grid-tile
+  <mat-grid-tile class="recipe-list"
     [colspan]=1
-    [rowspan]=1
-    [style.background]="'blue'">
+    [rowspan]=1>
     <app-recipe-list></app-recipe-list>
   </mat-grid-tile>
 
   <mat-grid-tile
     [colspan]=2
-    [rowspan]=1
-    [style.background]="'yellow'">
+    [rowspan]=1>
     <router-outlet></router-outlet>
   </mat-grid-tile>
 </mat-grid-list>
