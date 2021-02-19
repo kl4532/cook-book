@@ -1,31 +1,65 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
 import {Recipe} from './models/recipe';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class RecipeService {
+  changesTriggered: EventEmitter<boolean> = new EventEmitter();
+  httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+  };
 
   constructor(
     private http: HttpClient,
-    public dialog: MatDialog) { }
-
-  getAllRecipes(): any {
-    return this.http.get('../../assets/mockRecipes.json').pipe(map((obj: any) => {
-      return obj.recipes;
-    }));
+    public dialog: MatDialog,
+    @Inject('API_URL') private baseUrl: string) {
   }
 
-  getRecipeDetails(id: string): any{
-    // return this.http.get(`recipes/${id}`);
-    return this.http.get('../../assets/mockRecipes.json').pipe(map((obj: any) => {
-      return obj.recipes.filter((recipe: Recipe) => recipe._id === id)[0];
-    }));
+  getAllRecipes(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/recipes`);
+  }
+
+  getRecipeDetails(id: string): Observable<any>{
+    return this.http.get(`${this.baseUrl}/recipes/${id}`);
+  }
+
+  createRecipe(recipe: Recipe): any {
+    return this.http.post<Recipe>(`${this.baseUrl}/recipes`, recipe).subscribe(
+      data => {
+        console.log('success', data);
+        this.changesTriggered.emit(true);
+      },
+      error => console.log('oops', error)
+    );
+  }
+
+
+  deleteRecipe(id: string): any {
+    return this.http.delete(`${this.baseUrl}/recipes/${id}`).subscribe(
+      data => {
+              console.log('success', data);
+              this.changesTriggered.emit(true);
+            },
+      error => console.log('oops', error)
+    );
+  }
+
+  updateRecipe(id: string, recipe: Recipe): any {
+    return this.http.put(`${this.baseUrl}/recipes/${id}`, recipe).subscribe(
+      data => {
+        console.log('success', data);
+        this.changesTriggered.emit(true);
+      },
+      error => console.log('oops', error)
+    );
   }
 
   confirmDeletion(id: string): void {
@@ -41,8 +75,7 @@ export class RecipeService {
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        // remove recipe with id
-        console.log('deletion confirmed');
+        this.deleteRecipe(id);
       }
     });
   }
