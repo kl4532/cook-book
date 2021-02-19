@@ -9,8 +9,9 @@
   <h3 class="align-vertically"><mat-icon> list_alt</mat-icon> Ingredients</h3>
 
   <mat-list>
-    <mat-list-item *ngFor='let ingredient of recipeDetails.ingredients'>
-      <mat-icon>chevron_right</mat-icon> {{ingredient.name}} - {{ingredient.quantity}}
+    <mat-list-item *ngFor='let ingredient of recipeDetails.ingredients' class="ingredients-list">
+      <mat-icon>chevron_right</mat-icon>
+      <p>{{ingredient.name}} - {{ingredient.quantity}}</p>
     </mat-list-item>
   </mat-list>
 </ng-container>
