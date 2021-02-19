@@ -1,0 +1,53 @@
+<!--Create new recipe-->
+
+<form [formGroup]="recipeForm">
+  <mat-form-field appearance="standard">
+    <mat-label>Recipe name</mat-label>
+    <input matInput formControlName="name">
+    <mat-error *ngIf="recipeForm.controls.name.invalid">Min 3 / Max 80 characters</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="standard">
+    <mat-label>Preparation time</mat-label>
+    <input matInput formControlName="preparation">
+    <span matSuffix>min</span>
+    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Must be numeral</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="standard">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="description">
+    <mat-error *ngIf="recipeForm.controls.preparation.invalid">Min 15 / Max 255 characters</mat-error>
+  </mat-form-field>
+
+<!--  Ingredients formArray-->
+  <div class="ingredient-header">
+    <h4>Ingredients</h4>
+    <button mat-mini-fab color="accent" type="button" (click)="addItem()"><mat-icon>add</mat-icon></button>
+  </div>
+
+  <ng-container *ngIf="ingredients">
+    <ng-container formArrayName="ingredients" *ngFor="let item of recipeForm.get('ingredients')['controls']; let i = index;">
+      <div class="ingredient-group" [formGroupName]="i">
+        <mat-form-field appearance="standard">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Quantity</mat-label>
+          <input matInput formControlName="quantity">
+        </mat-form-field>
+        <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"><mat-icon>remove_circle</mat-icon></button>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <div class="form-buttons">
+    <button mat-raised-button [disabled]="recipeForm.invalid" color="primary" (click)="onSave()">Save</button>
+    <button type="submit" mat-raised-button (click)="onCancel()">Cancel</button>
+  </div>
+
+
+</form>
+
+<!--Edit recipe-->
