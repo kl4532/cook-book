@@ -17,7 +17,7 @@
 
   <mat-form-field appearance="standard">
     <mat-label>Description</mat-label>
-    <input matInput formControlName="description">
+    <textarea matInput formControlName="description"></textarea>
     <mat-error *ngIf="recipeForm.controls.description.invalid">Min 15 / Max 255 characters</mat-error>
   </mat-form-field>
 
