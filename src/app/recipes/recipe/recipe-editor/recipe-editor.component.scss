@@ -1,3 +1,10 @@
+:host {
+  width: 75%;
+  @media (min-width:1000px){
+    width: 65%;
+  }
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -35,5 +42,4 @@ form {
       margin: 2em 0.5em;
     }
   }
-
 }
