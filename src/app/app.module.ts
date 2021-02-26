@@ -16,6 +16,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 import { InfoPageComponent } from './shared/info-page/info-page.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { InfoPageComponent } from './shared/info-page/info-page.component';
     MatGridListModule,
     MatToolbarModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]

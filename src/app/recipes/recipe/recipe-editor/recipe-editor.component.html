@@ -23,7 +23,7 @@
 
 <!--  Ingredients formArray-->
   <div class="ingredient-header">
-    <h4>Ingredients</h4>
+    <h4>Ingredients <small [style.color]="'#f44336'" *ngIf="this.ingredients.length<2">(min. two)</small></h4>
     <button mat-mini-fab color="accent" type="button" (click)="addItem('', '')"><mat-icon>add</mat-icon></button>
   </div>
 
