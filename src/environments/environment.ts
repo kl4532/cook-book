@@ -2,9 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const apiEndpoint = 'f54deec771ec43a0962e8f1fcf3d81bd';
+
 export const environment = {
   production: false,
-  API_URL: 'https://crudcrud.com/api/2be5f2f729f54c43a33ed0a0ab6f8923'
+  API_URL: `https://crudcrud.com/api/${apiEndpoint}`
 };
 
 /*
