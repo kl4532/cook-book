@@ -67,20 +67,22 @@ export class RecipeService {
   }
 
   confirmDeletion(id: string): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: `Are you sure want to remove this recipe`,
-        buttonText: {
-          ok: 'Yes',
-          cancel: 'No'
+    this.getRecipeDetails(id).subscribe(recipe => {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          message: `Are you sure you want to remove ${recipe.name} recipe?`,
+          buttonText: {
+            ok: 'Yes',
+            cancel: 'No'
+          }
         }
-      }
-    });
+      });
 
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.deleteRecipe(id);
-      }
+      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.deleteRecipe(id);
+        }
+      });
     });
   }
 }
