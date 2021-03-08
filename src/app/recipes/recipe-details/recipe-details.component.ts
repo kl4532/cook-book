@@ -24,6 +24,7 @@ export class RecipeDetailsComponent implements OnInit {
       this.recipeId = params[param];
       this.recipeService.getRecipeDetails(this.recipeId).subscribe((details: Recipe) => {
         this.recipeDetails = details;
+        console.log('details', details);
         this.cdr.detectChanges();
       });
     });

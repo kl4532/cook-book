@@ -4,6 +4,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
+import {Ingredient} from './models/ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +31,31 @@ export class RecipeService {
   }
 
   getAllRecipes(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/recipes`);
+    return this.http.get(`${this.baseUrl}/recipes`).pipe(map((recipes: any) => {
+      return recipes.map((recipe: any) => {
+        return {
+          _id: recipe.id,
+          name: recipe.name,
+          preparationTimeInMinutes: recipe.preparation_time,
+          description: recipe.description
+        };
+      });
+    }));
   }
 
   getRecipeDetails(id: string): Observable<any>{
-    return this.http.get(`${this.baseUrl}/recipes/${id}`);
+    return this.http.get(`${this.baseUrl}/recipes/${id}`).pipe(mergeMap((recipe: any) => {
+      return this.http.get(`${this.baseUrl}/ingredients/${id}`).pipe(map((ingredients: any) => {
+          const detailedRecipe = {
+            _id: id,
+            name: recipe[0].name,
+            preparationTimeInMinutes: recipe[0].preparation_time,
+            description: recipe[0].description,
+            ingredients: ingredients.ingredients
+          };
+          return detailedRecipe;
+        }));
+    }));
   }
 
   createRecipe(recipe: Recipe): any {

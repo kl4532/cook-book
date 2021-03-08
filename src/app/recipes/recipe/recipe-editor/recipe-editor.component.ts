@@ -4,6 +4,7 @@ import {RecipeService} from '../../common/recipe.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ArrayValidators} from '../../common/array.validator';
 import {Recipe} from '../../common/models/recipe';
+// import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-recipe-editor',
@@ -69,31 +70,36 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
   setForm(): void {
     this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+      console.log('editForm', recipe);
       this.recipeForm.setValue({
         name: recipe.name,
         preparationTimeInMinutes: recipe.preparationTimeInMinutes,
         description: recipe.description,
         ingredients: []
       });
-      for (const ingredient of recipe.ingredients) {
-        this.addItem(ingredient.name, ingredient.quantity, ingredient.unit);
+
+      if (recipe.ingredients !== undefined) {
+        for (const ingredient of recipe.ingredients) {
+          this.addItem(ingredient.name, ingredient.amount, ingredient.unit, ingredient._id, );
+        }
       }
+
     });
   }
 
 
-  createItem(name: string, quantity: string, unit: string): FormGroup {
+  createItem(name: string, amount: string, unit: string, id?: string): FormGroup {
     return this.formBuilder.group({
-      _id: new Date().getUTCMilliseconds(),
+      _id: this.generateUUID(),
       name: [name, Validators.required ],
-      quantity: [quantity, [Validators.required, Validators.pattern('^[0-9]*$')] ],
+      amount: [amount, [Validators.required, Validators.pattern('^[0-9]*$')] ],
       unit: [unit, ]
     }, ArrayValidators.minLength(2));
   }
 
-  addItem(name: string, quantity: string, unit: string): void {
+  addItem(name: string, amount: string, unit: string, id?: string): void {
     this.ingredients = this.recipeForm.get('ingredients') as FormArray;
-    this.ingredients.push(this.createItem(name, quantity, unit));
+    this.ingredients.push(this.createItem(name, amount, unit, id));
   }
 
   removeItem(index: number): void {
@@ -109,12 +115,16 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
     if (this.modeEdit) {
       this.recipeService.updateRecipe(this.recipeId, this.recipeForm.value);
     } else {
-      this.recipeService.createRecipe(this.recipeForm.value);
+      this.recipeService.createRecipe({_id: this.generateUUID(), ...this.recipeForm.value});
     }
   }
 
   ngOnDestroy(): void{
     console.log('Destroying...');
+  }
+
+  generateUUID(): string {
+    return new Date().getTime() + '_' + Math.random().toString(36).substr(2, 5);
   }
 
 }
