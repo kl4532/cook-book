@@ -76,23 +76,24 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
         ingredients: []
       });
       for (const ingredient of recipe.ingredients) {
-        this.addItem(ingredient.name, ingredient.quantity);
+        this.addItem(ingredient.name, ingredient.quantity, ingredient.unit);
       }
     });
   }
 
 
-  createItem(name: string, quantity: string): FormGroup {
+  createItem(name: string, quantity: string, unit: string): FormGroup {
     return this.formBuilder.group({
       _id: new Date().getUTCMilliseconds(),
       name: [name, Validators.required ],
-      quantity: [quantity, [Validators.required, Validators.pattern('^[0-9]*$')] ]
+      quantity: [quantity, [Validators.required, Validators.pattern('^[0-9]*$')] ],
+      unit: [unit, ]
     }, ArrayValidators.minLength(2));
   }
 
-  addItem(name: string, quantity: string): void {
+  addItem(name: string, quantity: string, unit: string): void {
     this.ingredients = this.recipeForm.get('ingredients') as FormArray;
-    this.ingredients.push(this.createItem(name, quantity));
+    this.ingredients.push(this.createItem(name, quantity, unit));
   }
 
   removeItem(index: number): void {

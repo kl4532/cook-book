@@ -24,7 +24,7 @@
 <!--  Ingredients formArray-->
   <div class="ingredient-header">
     <h4>Ingredients <small [style.color]="'#f44336'" *ngIf="this.ingredients.length<2">(min. two)</small></h4>
-    <button mat-mini-fab color="accent" type="button" (click)="addItem('', '')"><mat-icon>add</mat-icon></button>
+    <button mat-mini-fab color="accent" type="button" (click)="addItem('', '', '')"><mat-icon>add</mat-icon></button>
   </div>
 
   <ng-container *ngIf="ingredients">
@@ -38,6 +38,10 @@
           <mat-label>Quantity</mat-label>
           <input matInput formControlName="quantity">
 <!--          <mat-error *ngIf="ingredient.controls['quantity']invalid">Must be positive numeral</mat-error>-->
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Unit</mat-label>
+          <input matInput formControlName="unit">
         </mat-form-field>
         <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"><mat-icon>remove_circle</mat-icon></button>
       </div>
