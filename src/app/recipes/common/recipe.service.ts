@@ -43,7 +43,7 @@ export class RecipeService {
     }));
   }
 
-  getRecipeDetails(id: string): Observable<any>{
+  getRecipeDetails(id: number): Observable<any>{
     return this.http.get(`${this.baseUrl}/recipes/${id}`).pipe(mergeMap((recipe: any) => {
       return this.http.get(`${this.baseUrl}/ingredients/${id}`).pipe(map((ingredients: any) => {
           const detailedRecipe = {
@@ -68,7 +68,7 @@ export class RecipeService {
     );
   }
 
-  deleteRecipe(id: string): any {
+  deleteRecipe(id: number): any {
     return this.http.delete(`${this.baseUrl}/recipes/${id}`).subscribe(
       data => {
               console.log('success', data);
@@ -78,7 +78,7 @@ export class RecipeService {
     );
   }
 
-  updateRecipe(id: string, recipe: Recipe): any {
+  updateRecipe(id: number, recipe: Recipe): any {
     return this.http.put(`${this.baseUrl}/recipes/${id}`, recipe).subscribe(
       data => {
         console.log('success', data);
@@ -88,7 +88,7 @@ export class RecipeService {
     );
   }
 
-  confirmDeletion(id: string): void {
+  confirmDeletion(id: number): void {
     this.getRecipeDetails(id).subscribe(recipe => {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: {

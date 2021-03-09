@@ -1,7 +1,7 @@
 import {Ingredient} from './ingredient';
 
 export interface Recipe {
-  _id: string;
+  _id: number;
   name: string;
   preparationTimeInMinutes: number;
   description: string;

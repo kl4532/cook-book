@@ -22,7 +22,7 @@ export class RecipeDetailsComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       const param = 'id';
       this.recipeId = params[param];
-      this.recipeService.getRecipeDetails(this.recipeId).subscribe((details: Recipe) => {
+      this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe((details: Recipe) => {
         this.recipeDetails = details;
         console.log('details', details);
         this.cdr.detectChanges();
@@ -30,7 +30,7 @@ export class RecipeDetailsComponent implements OnInit {
     });
   }
 
-  onDeleteRecipe(id: string): void {
+  onDeleteRecipe(id: number): void {
     this.recipeService.confirmDeletion(id);
   }
 }

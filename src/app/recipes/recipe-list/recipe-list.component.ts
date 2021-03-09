@@ -46,7 +46,7 @@ export class RecipeListComponent implements OnInit, OnDestroy{
     }
   }
 
-  onDeleteRecipe(id: string): void {
+  onDeleteRecipe(id: number): void {
     this.recipeService.confirmDeletion(id);
   }
 

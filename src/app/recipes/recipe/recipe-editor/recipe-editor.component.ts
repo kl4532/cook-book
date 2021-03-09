@@ -34,7 +34,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
       this.recipeId = params[param];
       this.modeEdit = !!this.recipeId;
       if (this.modeEdit) {
-          this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+          this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe((recipe: Recipe) => {
             this.recipe = recipe;
             this.setForm();
             this.cdr.detectChanges();
@@ -69,7 +69,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
   }
 
   setForm(): void {
-    this.recipeService.getRecipeDetails(this.recipeId).subscribe((recipe: Recipe) => {
+    this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe((recipe: Recipe) => {
       console.log('editForm', recipe);
       this.recipeForm.setValue({
         name: recipe.name,
@@ -88,7 +88,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
   }
 
 
-  createItem(name: string, amount: string, unit: string, id?: string): FormGroup {
+  createItem(name: string, amount: string, unit: string, id?: number): FormGroup {
     return this.formBuilder.group({
       _id: this.generateUUID(),
       name: [name, Validators.required ],
@@ -97,7 +97,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
     }, ArrayValidators.minLength(2));
   }
 
-  addItem(name: string, amount: string, unit: string, id?: string): void {
+  addItem(name: string, amount: string, unit: string, id?: number): void {
     this.ingredients = this.recipeForm.get('ingredients') as FormArray;
     this.ingredients.push(this.createItem(name, amount, unit, id));
   }
@@ -113,7 +113,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
   onSave(): void {
     if (this.modeEdit) {
-      this.recipeService.updateRecipe(this.recipeId, this.recipeForm.value);
+      this.recipeService.updateRecipe(parseInt(this.recipeId), this.recipeForm.value);
     } else {
       this.recipeService.createRecipe({_id: this.generateUUID(), ...this.recipeForm.value});
     }
@@ -123,8 +123,8 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
     console.log('Destroying...');
   }
 
-  generateUUID(): string {
-    return new Date().getTime() + '_' + Math.random().toString(36).substr(2, 5);
+  generateUUID(): number {
+    return new Date().getTime() + Math.round(Math.random() * 1E7);
   }
 
 }
