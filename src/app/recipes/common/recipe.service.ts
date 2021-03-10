@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {Ingredient} from './models/ingredient';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class RecipeService {
   constructor(
     private http: HttpClient,
     public dialog: MatDialog,
+    private router: Router,
     @Inject('API_URL') private baseUrl: string) {
   }
 
@@ -103,6 +105,8 @@ export class RecipeService {
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.deleteRecipe(id);
+          this.router.navigate(['']);
+          this.changesTriggered.emit(true);
         }
       });
     });
