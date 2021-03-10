@@ -80,7 +80,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
       if (recipe.ingredients !== undefined) {
         for (const ingredient of recipe.ingredients) {
-          this.addItem(ingredient.name, ingredient.amount, ingredient.unit, ingredient._id, );
+          this.addItem(ingredient.name, ingredient.amount, ingredient.unit, ingredient._id);
         }
       }
 
@@ -90,7 +90,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
   createItem(name: string, amount: string, unit: string, id?: number): FormGroup {
     return this.formBuilder.group({
-      _id: this.generateUUID(),
+      _id: id || this.generateUUID(),
       name: [name, Validators.required ],
       amount: [amount, [Validators.required, Validators.pattern('^[0-9]*$')] ],
       unit: [unit, ]
@@ -113,10 +113,11 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
   onSave(): void {
     if (this.modeEdit) {
-      this.recipeService.updateRecipe(parseInt(this.recipeId), this.recipeForm.value);
+      this.recipeService.updateRecipe(parseInt(this.recipeId), {_id: this.recipeId, ...this.recipeForm.value});
     } else {
       this.recipeService.createRecipe({_id: this.generateUUID(), ...this.recipeForm.value});
     }
+    this.router.navigate(['']);
   }
 
   ngOnDestroy(): void{

@@ -49,7 +49,7 @@
   </ng-container>
 
   <div class="form-buttons">
-    <button mat-raised-button [disabled]="recipeForm.invalid" color="primary" (click)="onSave()">Save</button>
+    <button mat-raised-button [disabled]="recipeForm.invalid || recipeForm.pristine" color="primary" (click)="onSave()">Save</button>
     <button type="submit" mat-raised-button (click)="onCancel()">Cancel</button>
   </div>
 
