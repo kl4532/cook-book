@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {RecipeService} from '../common/recipe.service';
 import {Recipe} from '../common/models/recipe';
 
@@ -15,6 +15,7 @@ export class RecipeDetailsComponent implements OnInit {
   recipeDetails: any;
   constructor(private activatedRoute: ActivatedRoute,
               private recipeService: RecipeService,
+              private router: Router,
               private cdr: ChangeDetectorRef) {
   }
 
@@ -22,11 +23,17 @@ export class RecipeDetailsComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       const param = 'id';
       this.recipeId = params[param];
-      this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe((details: Recipe) => {
-        this.recipeDetails = details;
-        console.log('details', details);
-        this.cdr.detectChanges();
-      });
+      this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe(
+        (details: Recipe) => {
+          this.recipeDetails = details;
+          console.log('details', details);
+          this.cdr.detectChanges();
+          },
+        (err: any) => {
+          this.router.navigate(['recipeNotFound']);
+        }
+        );
+
     });
   }
 

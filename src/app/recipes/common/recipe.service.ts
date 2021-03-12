@@ -5,7 +5,6 @@ import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {Ingredient} from './models/ingredient';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -71,19 +70,12 @@ export class RecipeService {
   }
 
   deleteRecipe(id: number): any {
-    return this.http.delete(`${this.baseUrl}/recipes/${id}`).subscribe(
-      data => {
-              console.log('success', data);
-              this.changesTriggered.emit(true);
-            },
-      error => console.log('ERROR', error)
-    );
+    return this.http.delete(`${this.baseUrl}/recipes/${id}`);
   }
 
   updateRecipe(id: number, recipe: Recipe): any {
     return this.http.put(`${this.baseUrl}/recipes/${id}`, recipe).subscribe(
       data => {
-        console.log('success', data);
         this.changesTriggered.emit(true);
       },
       error => console.log('ERROR', error)
@@ -104,9 +96,13 @@ export class RecipeService {
 
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.deleteRecipe(id);
-          this.router.navigate(['']);
-          this.changesTriggered.emit(true);
+          this.deleteRecipe(id).subscribe(
+            (res: any) => {
+              this.changesTriggered.emit(true);
+              this.router.navigate(['']);
+            },
+            (error: any) => console.log('ERROR', error)
+          );
         }
       });
     });

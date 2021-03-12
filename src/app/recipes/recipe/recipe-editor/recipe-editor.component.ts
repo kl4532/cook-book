@@ -62,7 +62,7 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
       description: new FormControl('', [
         Validators.required,
         Validators.minLength(15),
-        Validators.maxLength(255)
+        Validators.maxLength(2000)
       ]),
       ingredients: this.formBuilder.array([], [Validators.required, ArrayValidators.minLength(2)])
     });
@@ -70,7 +70,6 @@ export class RecipeEditorComponent implements OnInit, OnDestroy {
 
   setForm(): void {
     this.recipeService.getRecipeDetails(parseInt(this.recipeId)).subscribe((recipe: Recipe) => {
-      console.log('editForm', recipe);
       this.recipeForm.setValue({
         name: recipe.name,
         preparationTimeInMinutes: recipe.preparationTimeInMinutes,
