@@ -3,12 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 const apiEndpoint = '/api';
-const baseUrl = 'http://localhost:3000';
+// const baseUrl = 'http://localhost:3000';
+const baseUrl = 'http://localhost:5000';
 
 export const environment = {
   production: false,
+  http_timeout: 10,
   API_URL: `${baseUrl}${apiEndpoint}`
-  // API_URL: `https://crudcrud.com/api/${apiEndpoint}`
 };
 
 /*
