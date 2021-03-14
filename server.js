@@ -8,7 +8,10 @@ function requireHTTPS(req, res, next) {
 
 const express = require('express');
 const app = express();
+
 const port = process.env.PORT || '8080';
+const ip = process.env.IP || 'http://localhost:';
+
 
 
 app.use(requireHTTPS);
@@ -19,5 +22,5 @@ app.get('/*', (req, res) =>
 );
 
 app.listen(port, ()=> {
-  console.log(`Server is running on port https://localhost:${port}...`);
+  console.log(`Server is running on port ${ip+port}...`);
 });
