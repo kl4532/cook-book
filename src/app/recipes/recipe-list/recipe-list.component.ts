@@ -30,7 +30,7 @@ export class RecipeListComponent implements OnInit, OnDestroy{
   }
 
   getAllRecipes(): void {
-    this.recipeService.getAllRecipes().subscribe((recipes: Recipe[]) => {
+    this.recipeService.recipes$.subscribe((recipes: Recipe[]) => {
       this.recipes = recipes;
       this.filterRecipes();
       this.cdr.detectChanges();

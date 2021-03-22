@@ -22,7 +22,7 @@ export class InfoPageComponent implements OnInit {
   }
 
   getRecipes(): void {
-    this.recipeService.getAllRecipes().subscribe(recipes => {
+    this.recipeService.recipes$.subscribe(recipes => {
       this.recipesNumber = recipes.length;
       this.cdr.detectChanges();
     });

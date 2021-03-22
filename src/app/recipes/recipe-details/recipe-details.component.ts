@@ -38,6 +38,7 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   onDeleteRecipe(id: number): void {
+    this.recipeService.recipes$.subscribe();
     this.recipeService.confirmDeletion(id);
   }
 }

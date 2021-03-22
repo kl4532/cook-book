@@ -3,8 +3,8 @@ import {Recipe} from './models/recipe';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {Observable} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, EMPTY, Observable, throwError} from 'rxjs';
+import {catchError, map, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -24,6 +24,28 @@ export class RecipeService {
     )
   };
 
+  recipes$ = this.http.get<any>(`${this.baseUrl}/recipes/`)
+    .pipe(
+      map( recipes => recipes.map((recipe: any) => {
+          return {
+            _id: recipe.id,
+            name: recipe.name,
+            preparationTimeInMinutes: recipe.preparation_time,
+            description: recipe.description
+          } as Recipe;
+        })
+      ),
+      tap(data => console.log('recipes', data)),
+      // shareReplay(1),
+      catchError(this.handleError)
+    );
+
+  ingredients$ = this.http.get(`${this.baseUrl}/ingredients/`)
+    .pipe(
+      tap(data => console.log(data)),
+      catchError(this.handleError)
+    );
+
   constructor(
     private http: HttpClient,
     public dialog: MatDialog,
@@ -31,22 +53,13 @@ export class RecipeService {
     @Inject('API_URL') private baseUrl: string) {
   }
 
-  getAllRecipes(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/recipes`).pipe(map((recipes: any) => {
-      return recipes.map((recipe: any) => {
-        return {
-          _id: recipe.id,
-          name: recipe.name,
-          preparationTimeInMinutes: recipe.preparation_time,
-          description: recipe.description
-        };
-      });
-    }));
-  }
-
   getRecipeDetails(id: number): Observable<any>{
-    return this.http.get(`${this.baseUrl}/recipes/${id}`).pipe(mergeMap((recipe: any) => {
-      return this.http.get(`${this.baseUrl}/ingredients/${id}`).pipe(map((ingredients: any) => {
+    return combineLatest([
+      this.http.get<any>(`${this.baseUrl}/recipes/${id}`),
+      this.http.get<any>(`${this.baseUrl}/ingredients/${id}`)
+    ])
+      .pipe(
+        map(([recipe, ingredients]) => {
           const detailedRecipe = {
             _id: id,
             name: recipe[0].name,
@@ -55,8 +68,9 @@ export class RecipeService {
             ingredients: ingredients.ingredients
           };
           return detailedRecipe;
-        }));
-    }));
+        }),
+        catchError(this.handleError)
+      );
   }
 
   createRecipe(recipe: Recipe): any {
@@ -106,5 +120,19 @@ export class RecipeService {
         }
       });
     });
+  }
+
+  private handleError(err: any): Observable<never> {
+    let errorMessage: string;
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
+    }
+    console.error(err);
+    return throwError(errorMessage);
   }
 }
